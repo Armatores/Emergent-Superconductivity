@@ -1,32 +1,22 @@
-import numpy as np
-
-T0 = 95.0  # K (константа для купратов)
-C_max = 1.8e6  # Макс. сложность обработки
-
-def calculate_tc(material_params):
+# ПРОСТОЙ КАЛЬКУЛЯТОР Tc ДЛЯ GITHUB
+def calculate_tc(dimensionality, ion_complexity, defect_density):
     """
-    T_c = T0 * sqrt(C_max / C_lattice)
-    
-    material_params: словарь с ключами:
-      'dimensionality' (2 или 3), 
-      'ion_complexity' (относительная сложность ионов 1-10),
-      'defect_density' (0-1)
+    ФОРМУЛА: T_c = T0 * sqrt(C_max / C_lattice)
+    Где C_lattice = 10000 * ion_complexity * (0.7 если 2D) * (1 + 2*defect_density)
     """
-    base_complexity = 10000 * material_params['ion_complexity']
-    dim_factor = 0.7 if material_params['dimensionality'] == 2 else 1.0
-    defect_penalty = 1 + 2 * material_params['defect_density']
+    T0 = 95.0  # Для купратов
+    C_max = 1800000
     
-    C_lattice = base_complexity * dim_factor * defect_penalty
+    # Расчёт сложности решётки
+    base_complexity = 10000 * ion_complexity
+    dim_factor = 0.7 if dimensionality == 2 else 1.0
+    defect_factor = 1 + 2 * defect_density
+    C_lattice = base_complexity * dim_factor * defect_factor
     
     if C_lattice > C_max:
         return 0  # Нет сверхпроводимости
     else:
-        return T0 * np.sqrt(C_max / C_lattice)
+        return round(T0 * (C_max / C_lattice)**0.5, 1)
 
-# ПРИМЕР ИСПОЛЬЗОВАНИЯ:
-ybco_params = {
-    'dimensionality': 2,
-    'ion_complexity': 4.2,  # CuO2 planes
-    'defect_density': 0.1
-}
-print(f"Предсказанная T_c для YBCO: {calculate_tc(ybco_params):.1f} K")  # → 92.1 K (реальная 92K)
+# Пример использования:
+print("Предсказанная Tc для YBCO:", calculate_tc(2, 4.2, 0.1), "K")

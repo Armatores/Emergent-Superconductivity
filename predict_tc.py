@@ -1,7 +1,7 @@
-# ПРОСТОЙ КАЛЬКУЛЯТОР Tc ДЛЯ GITHUB
+# КАЛЬКУЛЯТОР Tc
 def calculate_tc(dimensionality, ion_complexity, defect_density):
     """
-    ФОРМУЛА: T_c = T0 * sqrt(C_max / C_lattice)
+    ВАША ФОРМУЛА: T_c = T0 * sqrt(C_max / C_lattice)
     Где C_lattice = 10000 * ion_complexity * (0.7 если 2D) * (1 + 2*defect_density)
     """
     T0 = 95.0  # Для купратов
